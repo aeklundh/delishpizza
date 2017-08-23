@@ -27,7 +27,7 @@ namespace PizzeriaDelish
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebshopDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseInMemoryDatabase(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<WebshopDbContext>()
