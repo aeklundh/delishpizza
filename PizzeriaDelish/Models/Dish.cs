@@ -11,6 +11,7 @@ namespace PizzeriaDelish.Models
         public int DishId { get; set; }
         [Required]
         public string Name { get; set; }
+        public string Description { get; set; }
         [Required]
         public int Price { get; set; }
         public int CategoryId { get; set; }
