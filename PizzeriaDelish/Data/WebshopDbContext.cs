@@ -56,6 +56,10 @@ namespace PizzeriaDelish.Data
                 .WithMany(dor => dor.DishOrders)
                 .HasForeignKey(dor => dor.OrderId);
 
+            //set customingredient key
+            builder.Entity<CustomIngredient>()
+                .HasKey(ci => new { ci.DishOrderId, ci.IngredientId });
+
             base.OnModelCreating(builder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
@@ -68,6 +72,6 @@ namespace PizzeriaDelish.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<DishCategory> DishCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<CustomIngredient> AddedIngredients { get; set; }
+        public DbSet<CustomIngredient> CustomIngredients { get; set; }
     }
 }
