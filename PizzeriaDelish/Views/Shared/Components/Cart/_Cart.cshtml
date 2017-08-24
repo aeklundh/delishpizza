@@ -1,0 +1,34 @@
+﻿@model ICollection<CartItem>
+
+@if (Model.Count > 0)
+{
+    int total = 0;
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Maträtt</th>
+                <th>Pris</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CartItem cartItem in Model)
+            {
+                <tr>
+                    <td>@cartItem.Dish.Name</td>
+                    <td>@cartItem.Dish.Price</td>
+                    <td><button class="btn btn-link"><span class="glyphicon glyphicon-edit">&nbsp;</span></button></td>
+                </tr>
+                total += cartItem.Dish.Price;
+            }
+            <tr>
+                <td>Totalt pris:</td>
+                <td>@total</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Din varukorg är tom</p>
+}
