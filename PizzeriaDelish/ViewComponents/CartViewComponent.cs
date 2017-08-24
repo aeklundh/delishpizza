@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PizzeriaDelish.Extensions;
 
 namespace PizzeriaDelish.ViewComponents
 {
@@ -21,11 +22,14 @@ namespace PizzeriaDelish.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            List<CartItem> cart = new List<CartItem>();
-            string serialised = HttpContext.Session.GetString("cart");
-            if (!String.IsNullOrWhiteSpace(serialised))
+            List<CartItem> cart;
+            if (HttpContext.Session.CartIsEmpty())
             {
-                cart = JsonConvert.DeserializeObject<List<CartItem>>(serialised);
+                cart = new List<CartItem>();
+            }
+            else
+            {
+                cart = HttpContext.Session.DeserialiseCart();
             }
 
             return View("_Cart", cart);

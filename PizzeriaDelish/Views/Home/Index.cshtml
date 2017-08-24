@@ -4,17 +4,40 @@
     ViewData["Title"] = "Meny";
 }
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-9">
         <div class="row">
-            @foreach (Dish dish in Model)
-            {
-                <div class="col-md-4">
-                    <p>@dish.Name</p>
-                </div>
-            }
+            @*<form asp-controller="Cart" asp-action="AddToCart" method="post"></form>*@
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Maträtt</th>
+                        <th>&nbsp;</th>
+                        <th>Pris</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Dish dish in Model)
+                    {
+                        <tr>
+                            <td
+                                ><p>@dish.Name</p>
+                                <p>@dish.Description</p>
+                            </td>
+                            <td>
+                                <button class="btn btn-link" asp-controller="Cart" asp-action="AddToCart">
+                                    <span class="glyphicon glyphicon-shopping-cart">&nbsp;</span>
+                                </button>
+                            </td>
+                            <td>
+                                @dish.Price
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="col-md-3">
-        <p>information för sidan, cart el. dyl.</p>
+        @await Component.InvokeAsync("Cart")
     </div>
 </div>

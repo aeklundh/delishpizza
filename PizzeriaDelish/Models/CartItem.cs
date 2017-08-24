@@ -8,6 +8,11 @@ namespace PizzeriaDelish.Models
     public class CartItem
     {
         public Dish Dish { get; set; }
-        public List<CustomIngredient> CustomIngredients { get; set; }
+        public List<CustomIngredient> CustomIngredients { get; set; } = new List<CustomIngredient>();
+
+        public CartItem(Dish dish)
+        {
+            Dish = dish;
+        }
     }
 }
