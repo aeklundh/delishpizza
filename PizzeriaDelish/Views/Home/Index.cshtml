@@ -19,14 +19,20 @@
                     @foreach (Dish dish in Model)
                     {
                         <tr>
-                            <td
-                                ><p>@dish.Name</p>
+                            <td>
+                                <p>@dish.Name</p>
                                 <p>@dish.Description</p>
                             </td>
                             <td>
-                                <button class="btn btn-link" asp-controller="Cart" asp-action="AddToCart">
+                                <a class="btn btn-link" asp-controller="Cart"
+                                        asp-action="AddToCart"
+                                        asp-route-dishId="@dish.DishId"
+                                        data-ajax="true"
+                                        data-ajax-mode="replace"
+                                        data-ajax-update="#cartWrap"
+                                        data-ajax-method="GET">
                                     <span class="glyphicon glyphicon-shopping-cart">&nbsp;</span>
-                                </button>
+                                </a>
                             </td>
                             <td>
                                 @dish.Price
@@ -37,7 +43,7 @@
             </table>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" id="cartWrap">
         @await Component.InvokeAsync("Cart")
     </div>
 </div>

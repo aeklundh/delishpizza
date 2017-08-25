@@ -8,6 +8,7 @@ using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using Newtonsoft.Json;
 using PizzeriaDelish.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzeriaDelish.Controllers
 {
@@ -26,6 +27,7 @@ namespace PizzeriaDelish.Controllers
             return ViewComponent("Cart");
         }
 
+        [HttpGet]
         public ActionResult AddToCart(int dishId)
         {
             Dish dish = _context.Dishes.FirstOrDefault(x => x.DishId == dishId);
@@ -34,17 +36,14 @@ namespace PizzeriaDelish.Controllers
                 List<CartItem> cart;
                 if (HttpContext.Session.CartIsEmpty())
                 {
-                    if (dish != null)
-                    {
-                        cart = new List<CartItem>() { new CartItem(dish) };
-                        HttpContext.Session.SerialiseCart(cart);
-                    }
+                    cart = new List<CartItem>() { new CartItem(dish) };
                 }
                 else
                 {
                     cart = HttpContext.Session.DeserialiseCart();
                     cart.Add(new CartItem(dish));
                 }
+                HttpContext.Session.SerialiseCart(cart);
             }
 
             return ViewComponent("Cart");
