@@ -17,7 +17,7 @@ namespace PizzeriaDelish.Extensions
 
         public static void SerialiseCart(this ISession session, ICollection<CartItem> cart)
         {
-            session.SetString("cart", JsonConvert.SerializeObject(cart));
+            session.SetString("cart", JsonConvert.SerializeObject(cart, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore }));
         }
 
         public static List<CartItem> DeserialiseCart(this ISession session)

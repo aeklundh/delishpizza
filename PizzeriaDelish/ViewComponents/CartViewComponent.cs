@@ -13,6 +13,13 @@ namespace PizzeriaDelish.ViewComponents
 {
     public class CartViewComponent : ViewComponent
     {
+        private readonly WebshopDbContext _context;
+
+        public CartViewComponent(WebshopDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IViewComponentResult> InvokeAsync()
         {
             List<CartItem> cart;

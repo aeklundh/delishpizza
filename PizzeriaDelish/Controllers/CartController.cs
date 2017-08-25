@@ -27,21 +27,31 @@ namespace PizzeriaDelish.Controllers
             return ViewComponent("Cart");
         }
 
-        [HttpGet]
+        [HttpPost]
         public ActionResult AddToCart(int dishId)
         {
-            Dish dish = _context.Dishes.FirstOrDefault(x => x.DishId == dishId);
+            Dish dish = _context.Dishes
+                .Include(x => x.DishIngredients)
+                .ThenInclude(x => x.Ingredient)
+                .FirstOrDefault(x => x.DishId == dishId);
             if (dish != null)
             {
                 List<CartItem> cart;
+                CartItem addItem = new CartItem(dish) { CartItemId = Guid.NewGuid() };
+                List<CustomIngredient> addedIngredients = new List<CustomIngredient>();
+                foreach (DishIngredient dishIngredient in dish.DishIngredients)
+                {
+                    addedIngredients.Add(new CustomIngredient(dishIngredient.IngredientId, true));
+                }
+                addItem.CustomIngredients.AddRange(addedIngredients);
                 if (HttpContext.Session.CartIsEmpty())
                 {
-                    cart = new List<CartItem>() { new CartItem(dish) };
+                    cart = new List<CartItem>() { addItem };
                 }
                 else
                 {
                     cart = HttpContext.Session.DeserialiseCart();
-                    cart.Add(new CartItem(dish));
+                    cart.Add(addItem);
                 }
                 HttpContext.Session.SerialiseCart(cart);
             }
@@ -49,27 +59,58 @@ namespace PizzeriaDelish.Controllers
             return ViewComponent("Cart");
         }
 
-        // GET: Cart/Edit
-        public ActionResult EditDish(Dish dish)
+        [HttpGet]
+        public ActionResult AlterItem(Guid cartItemId)
         {
-            return View();
+            return ViewComponent("CartItemDetails", cartItemId);
         }
 
-        // POST: Cart/Delete/5
+        // POST: Cart/Edit/{cartItem}
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RemoveDish(CartItem cartItem)
+        public ActionResult AlterItem(int? ingredientId, bool add, Guid cartItemId)
+        {
+            Ingredient ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == ingredientId);
+
+            if (ingredient != null && !HttpContext.Session.CartIsEmpty())
+            {
+                List<CartItem> cart = HttpContext.Session.DeserialiseCart();
+                CartItem toAlter = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
+                if (toAlter != null)
+                {
+                    if (add)
+                    {
+                        toAlter.CustomIngredients.Add(new CustomIngredient(ingredient.IngredientId, true));
+                    }
+                    else
+                    {
+                        CustomIngredient customIngredient = toAlter.CustomIngredients.FirstOrDefault(x => x.IngredientId == ingredientId);
+                        if (customIngredient != null)
+                        {
+                            toAlter.CustomIngredients.Remove(customIngredient);
+                        }
+                    }
+
+                    HttpContext.Session.SerialiseCart(cart);
+                }
+            }
+            return ViewComponent("CartItemDetails", cartItemId);
+        }
+
+        // GET: Cart/Delete/5
+        [HttpPost]
+        public ActionResult RemoveItem(Guid cartItemId)
         {
             if (!HttpContext.Session.CartIsEmpty())
             {
                 List<CartItem> cart = HttpContext.Session.DeserialiseCart();
-                CartItem toRemove = cart.FirstOrDefault(x => x == cartItem);
-                if (toRemove != null)
+                CartItem cartItem = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
+                if (cartItem != null)
                 {
-                    cart.Remove(toRemove);
+                    cart.Remove(cartItem);
+                    HttpContext.Session.SerialiseCart(cart);
                 }
-                HttpContext.Session.SerialiseCart(cart);
             }
+
             return ViewComponent("Cart");
         }
     }

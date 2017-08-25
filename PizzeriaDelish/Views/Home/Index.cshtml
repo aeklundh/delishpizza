@@ -6,7 +6,6 @@
 <div class="row">
     <div class="col-md-9">
         <div class="row">
-            @*<form asp-controller="Cart" asp-action="AddToCart" method="post"></form>*@
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -24,13 +23,14 @@
                                 <p>@dish.Description</p>
                             </td>
                             <td>
-                                <a class="btn btn-link" asp-controller="Cart"
+                                <a class="btn btn-link"
+                                        asp-controller="Cart"
                                         asp-action="AddToCart"
                                         asp-route-dishId="@dish.DishId"
                                         data-ajax="true"
                                         data-ajax-mode="replace"
                                         data-ajax-update="#cartWrap"
-                                        data-ajax-method="GET">
+                                        data-ajax-method="POST">
                                     <span class="glyphicon glyphicon-shopping-cart">&nbsp;</span>
                                 </a>
                             </td>

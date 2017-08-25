@@ -13,9 +13,10 @@ namespace PizzeriaDelish.Models
         [Required]
         public bool IsAdded { get; set; }
 
-        public CustomIngredient()
+        public CustomIngredient(int ingredientId, bool isAdded)
         {
-            IsAdded = true;
+            IngredientId = ingredientId;
+            IsAdded = isAdded;
         }
 
         public DishOrder DishOrder { get; set; }

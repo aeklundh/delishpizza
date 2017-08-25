@@ -1,0 +1,68 @@
+﻿@model PizzeriaDelish.Models.ViewComponentViewModels.CartItemDetailsViewComponentViewModel
+
+<div>
+    <div>
+        <span class="glyphicon glyphicon-remove">&nbsp;</span>
+    </div>
+    <!--add ingredients-->
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Lägg till</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Ingredient ingredient in Model.AvailableIngredients)
+            {
+                <tr>
+                    <td>@ingredient.Name</td>
+                    <td>
+                        <a asp-controller="Cart"
+                           asp-action="AlterItem"
+                           asp-route-ingredientId="@ingredient.IngredientId"
+                           asp-route-add="@true"
+                           asp-route-cartItemId="@Model.CartItem.CartItemId"
+                           data-ajax="true"
+                           data-ajax-mode="replace"
+                           data-ajax-update="#cartDetailsWrap"
+                           data-ajax-method="POST">
+                            <span class="glyphicon glyphicon-check">&nbsp;</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+    <!--remove ingredients-->
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>Ta bort</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Ingredient ingredient in Model.AddedIngredients)
+            {
+                <tr>
+                    <td>@ingredient.Name</td>
+                    <td>
+                        <a asp-controller="Cart"
+                           asp-action="AlterItem"
+                           asp-route-ingredientId="@ingredient.IngredientId"
+                           asp-route-add="@false"
+                           asp-route-cartItemId="@Model.CartItem.CartItemId"
+                           data-ajax="true"
+                           data-ajax-mode="replace"
+                           data-ajax-update="#cartDetailsWrap"
+                           data-ajax-method="POST">
+                            <span class="glyphicon glyphicon-remove-circle">&nbsp;</span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
