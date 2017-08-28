@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PizzeriaDelish.Models.Dish>
+﻿@model PizzeriaDelish.Models.DishViewModels.IndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -13,25 +13,26 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    Namn
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Description)
+                    Beskrivning
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Price)
+                    Pris
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.CategoryId)
+                    Kategori
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Active)
+                    Aktiv
                 </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Dishes)
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -43,14 +44,14 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryId)
+                @Model.Categories.FirstOrDefault(x => x.CategoryId == item.CategoryId).Name
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.DishId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DishId">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.DishId">Details</a>
             </td>
         </tr>
 }

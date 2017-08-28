@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using Microsoft.AspNetCore.Authorization;
+using PizzeriaDelish.Models.DishViewModels;
 
 namespace PizzeriaDelish.Controllers
 {
@@ -24,7 +25,8 @@ namespace PizzeriaDelish.Controllers
         // GET: Dishes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Dishes.ToListAsync());
+            IndexViewModel vm = new IndexViewModel(await _context.Dishes.ToListAsync(), await _context.Categories.ToListAsync());
+            return View(vm);
         }
 
         // GET: Dishes/Details/5
@@ -78,7 +80,9 @@ namespace PizzeriaDelish.Controllers
             {
                 return NotFound();
             }
-            return View(dish);
+
+            EditViewModel vm = new EditViewModel(dish, _context.Categories.ToList());
+            return View(vm);
         }
 
         // POST: Dishes/Edit/5

@@ -52,10 +52,10 @@ namespace PizzeriaDelish.Data
                 new Ingredient() { Name = "Champinjoner" }
             };
             List<Dish> dishes = new List<Dish>() {
-                new Dish() { Name = "Margherita", Price = 58, Description = "Den grundläggande pizzan, utan extra pålägg." },
-                new Dish() { Name = "Vesuvio", Price = 58, Description = "Med skinka på." },
-                new Dish() { Name = "Hawaii", Price = 58, Description = "Med ananas och skinka." },
-                new Dish() { Name = "Capricciosa", Price = 58, Description = "En klassiker med champinjoner och skinka." }
+                new Dish() { Name = "Margherita", Price = 58, Description = "Den grundläggande pizzan, utan extra pålägg.", CategoryId = 1 },
+                new Dish() { Name = "Vesuvio", Price = 58, Description = "Med skinka på.", CategoryId = 1 },
+                new Dish() { Name = "Hawaii", Price = 58, Description = "Med ananas och skinka.", CategoryId = 1 },
+                new Dish() { Name = "Capricciosa", Price = 58, Description = "En klassiker med champinjoner och skinka.", CategoryId = 1 }
             };
             List<DishCategory> dishCategories = new List<DishCategory>() {
                 new DishCategory() { Dish = dishes[0], Category = categories[0] },
