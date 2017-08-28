@@ -50,7 +50,7 @@ namespace PizzeriaDelish.Controllers
         // GET: Dishes/Create
         public IActionResult Create()
         {
-            return View();
+            return View(new CreateViewModel(_context.Categories.ToList()));
         }
 
         // POST: Dishes/Create
@@ -81,8 +81,7 @@ namespace PizzeriaDelish.Controllers
                 return NotFound();
             }
 
-            EditViewModel vm = new EditViewModel(dish, _context.Categories.ToList());
-            return View(vm);
+            return View(new EditViewModel(dish, _context.Categories.ToList()));
         }
 
         // POST: Dishes/Edit/5
