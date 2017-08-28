@@ -23,5 +23,34 @@ namespace PizzeriaDelish.Models.AccountViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Du måste ange ditt mobilnummer"),
+            DataType(DataType.PhoneNumber),
+            Display(Name = "Telefonnummer"),
+            RegularExpression(@"(\+?46|0)7\d{8}", ErrorMessage = "Var god lägg till ett giltigt mobiltelefonnummer")]
+        public string PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Du måste skriva in ditt förnamn"),
+            Display(Name = "Förnamn")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Du måste skriva in ditt efternamn"),
+            Display(Name = "Efternamn")]
+        public string Surname { get; set; }
+
+        [Required(ErrorMessage = "Du måste skriva in din adress"),
+            Display(Name = "Adress"),
+            MaxLength(200)]
+        public string Address { get; set; }
+
+        [Required(ErrorMessage = "Du måste skriva in din ort"),
+            Display(Name = "Ort"),
+            MaxLength(50)]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "Postkoden måste vara fem tecken lång"),
+            StringLength(5, MinimumLength = 5, ErrorMessage = "Postkoden måste vara fem tecken lång"),
+            Display(Name = "Postkod")]
+        public string PostalCode { get; set; }
     }
 }
