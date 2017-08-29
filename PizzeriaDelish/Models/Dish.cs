@@ -14,12 +14,13 @@ namespace PizzeriaDelish.Models
         public string Description { get; set; }
         [Required]
         public int Price { get; set; }
+        [Required]
         public int CategoryId { get; set; }
         [Required]
         public bool Active { get; set; }
 
         public ICollection<DishIngredient> DishIngredients { get; set; }
-        public ICollection<DishCategory> DishCategories { get; set; }
+        public Category Category { get; set; }
         public ICollection<DishOrder> DishOrders { get; set; }
     }
 }

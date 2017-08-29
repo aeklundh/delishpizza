@@ -57,12 +57,6 @@ namespace PizzeriaDelish.Data
                 new Dish() { Name = "Hawaii", Price = 58, Description = "Med ananas och skinka.", CategoryId = 1 },
                 new Dish() { Name = "Capricciosa", Price = 58, Description = "En klassiker med champinjoner och skinka.", CategoryId = 1 }
             };
-            List<DishCategory> dishCategories = new List<DishCategory>() {
-                new DishCategory() { Dish = dishes[0], Category = categories[0] },
-                new DishCategory() { Dish = dishes[1], Category = categories[0] },
-                new DishCategory() { Dish = dishes[2], Category = categories[0] },
-                new DishCategory() { Dish = dishes[3], Category = categories[0] }
-            };
             List<DishIngredient> dishIngredients = new List<DishIngredient>() {
                 new DishIngredient() { Dish = dishes[1], Ingredient = ingredients[0] },
                 new DishIngredient() { Dish = dishes[2], Ingredient = ingredients[0] },
@@ -74,7 +68,6 @@ namespace PizzeriaDelish.Data
             context.Categories.AddRange(categories);
             context.Ingredients.AddRange(ingredients);
             context.Dishes.AddRange(dishes);
-            context.DishCategories.AddRange(dishCategories);
             context.DishIngredients.AddRange(dishIngredients);
 
             context.SaveChanges();

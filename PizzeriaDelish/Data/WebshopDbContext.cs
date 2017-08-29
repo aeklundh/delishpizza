@@ -31,20 +31,6 @@ namespace PizzeriaDelish.Data
                 .WithMany(di => di.DishIngredients)
                 .HasForeignKey(di => di.IngredientId);
 
-            //set DishCategory keys
-            builder.Entity<DishCategory>()
-                .HasKey(dc => new { dc.DishId, dc.CategoryId });
-
-            builder.Entity<DishCategory>()
-                .HasOne(dc => dc.Dish)
-                .WithMany(dc => dc.DishCategories)
-                .HasForeignKey(dc => dc.DishId);
-
-            builder.Entity<DishCategory>()
-                .HasOne(dc => dc.Category)
-                .WithMany(dc => dc.DishCategories)
-                .HasForeignKey(dc => dc.CategoryId);
-
             //set DishOrder keys
             builder.Entity<DishOrder>()
                 .HasOne(dor => dor.Dish)
@@ -70,7 +56,7 @@ namespace PizzeriaDelish.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<DishCategory> DishCategories { get; set; }
+        //public DbSet<DishCategory> DishCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<CustomIngredient> CustomIngredients { get; set; }
     }

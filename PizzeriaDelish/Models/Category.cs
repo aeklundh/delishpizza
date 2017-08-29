@@ -12,6 +12,6 @@ namespace PizzeriaDelish.Models
         [Required, MaxLength(30)]
         public string Name { get; set; }
 
-        public ICollection<DishCategory> DishCategories { get; set; }
+        public ICollection<Dish> Dishes { get; set; }
     }
 }

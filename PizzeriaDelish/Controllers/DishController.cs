@@ -38,6 +38,7 @@ namespace PizzeriaDelish.Controllers
             }
 
             var dish = await _context.Dishes
+                .Include(x => x.Category)
                 .SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
