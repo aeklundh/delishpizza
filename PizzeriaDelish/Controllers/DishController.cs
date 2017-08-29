@@ -75,21 +75,21 @@ namespace PizzeriaDelish.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
+            var dish = await _context.Dishes.Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient).SingleOrDefaultAsync(m => m.DishId == id);
             if (dish == null)
             {
                 return NotFound();
             }
 
-            return View(new EditViewModel(dish, _context.Categories.ToList()));
+            return View(new EditViewModel(dish, await _context.Categories.ToListAsync(), await _context.Ingredients.ToListAsync()));
         }
 
         // POST: Dishes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,Description,Price,CategoryId,Active")] Dish dish)
+        public async Task<IActionResult> Edit(int id, EditViewModel vm) //int id, [Bind("DishId,Name,Description,Price,CategoryId,Active")] Dish dish, List<Ingredient> selectedIngredients
         {
-            if (id != dish.DishId)
+            if (id != vm.Dish.DishId)
             {
                 return NotFound();
             }
@@ -98,12 +98,31 @@ namespace PizzeriaDelish.Controllers
             {
                 try
                 {
-                    _context.Update(dish);
+                    _context.Update(vm.Dish);
+                    await _context.SaveChangesAsync();
+
+                    //remove old DishIngredients
+                    List<DishIngredient> dishIngredients = _context.DishIngredients.Where(di => di.DishId == vm.Dish.DishId).ToList();
+                    _context.DishIngredients.RemoveRange(dishIngredients);
+                    await _context.SaveChangesAsync();
+
+                    //create and add new DishIngredients
+                    dishIngredients = new List<DishIngredient>();
+                    foreach (SelectListItem ingredient in vm.Ingredients)
+                    {
+                        if (ingredient.Selected)
+                        {
+                            Ingredient i = _context.Ingredients.FirstOrDefault(x => x.IngredientId == int.Parse(ingredient.Value));
+                            if (i != null)
+                                dishIngredients.Add(new DishIngredient() { DishId = vm.Dish.DishId, IngredientId = i.IngredientId });
+                        }
+                    }
+                    _context.DishIngredients.AddRange(dishIngredients);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DishExists(dish.DishId))
+                    if (!DishExists(vm.Dish.DishId))
                     {
                         return NotFound();
                     }
@@ -114,7 +133,7 @@ namespace PizzeriaDelish.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(dish);
+            return View(vm);
         }
 
         private bool DishExists(int id)
