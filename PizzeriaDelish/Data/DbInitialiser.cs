@@ -39,12 +39,11 @@ namespace PizzeriaDelish.Data
             await userManager.AddToRoleAsync(adminUser, "Admin");
 
             List<Category> categories = new List<Category>() {
-                new Category() { Name = "Pizza" },
-                new Category() { Name = "Sallad" },
-                new Category() { Name = "Tillbehör" },
-                new Category() { Name = "Kebab" },
-                new Category() { Name = "Pasta" },
-                new Category() { Name = "Övrigt" }
+                new Category() { Name = "Pizza", Active = true },
+                new Category() { Name = "Sallad", Active = true },
+                new Category() { Name = "Tillbehör", Active = true },
+                new Category() { Name = "Kebab", Active = true },
+                new Category() { Name = "Övrigt", Active = true }
             };
             List<Ingredient> ingredients = new List<Ingredient>() {
                 new Ingredient() { Name = "Skinka" },
