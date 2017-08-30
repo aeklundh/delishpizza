@@ -9,16 +9,19 @@ using PizzeriaDelish.Models;
 using Newtonsoft.Json;
 using PizzeriaDelish.Extensions;
 using Microsoft.EntityFrameworkCore;
+using PizzeriaDelish.Services;
 
 namespace PizzeriaDelish.Controllers
 {
     public class CartController : Controller
     {
         private readonly WebshopDbContext _context;
+        private readonly CartService _cartService;
 
-        public CartController(WebshopDbContext context)
+        public CartController(WebshopDbContext context, CartService cartService)
         {
             _context = context;
+            _cartService = cartService;
         }
 
         // GET: Cart
@@ -30,31 +33,7 @@ namespace PizzeriaDelish.Controllers
         [HttpPost]
         public ActionResult AddToCart(int dishId)
         {
-            Dish dish = _context.Dishes
-                .Include(x => x.DishIngredients)
-                .ThenInclude(x => x.Ingredient)
-                .FirstOrDefault(x => x.DishId == dishId);
-            if (dish != null)
-            {
-                List<CartItem> cart;
-                CartItem addItem = new CartItem(dish) { CartItemId = Guid.NewGuid() };
-                List<CustomIngredient> addedIngredients = new List<CustomIngredient>();
-                foreach (DishIngredient dishIngredient in dish.DishIngredients)
-                {
-                    addedIngredients.Add(new CustomIngredient(dishIngredient.IngredientId, true));
-                }
-                addItem.CustomIngredients.AddRange(addedIngredients);
-                if (HttpContext.Session.CartIsEmpty())
-                {
-                    cart = new List<CartItem>() { addItem };
-                }
-                else
-                {
-                    cart = HttpContext.Session.DeserialiseCart();
-                    cart.Add(addItem);
-                }
-                HttpContext.Session.SerialiseCart(cart);
-            }
+            _cartService.AddToCart(HttpContext.Session, dishId);
 
             return ViewComponent("Cart");
         }
@@ -69,30 +48,11 @@ namespace PizzeriaDelish.Controllers
         [HttpPost]
         public ActionResult AlterItem(int? ingredientId, bool add, Guid cartItemId)
         {
-            Ingredient ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == ingredientId);
-
-            if (ingredient != null && !HttpContext.Session.CartIsEmpty())
+            if (ingredientId != null)
             {
-                List<CartItem> cart = HttpContext.Session.DeserialiseCart();
-                CartItem toAlter = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
-                if (toAlter != null)
-                {
-                    if (add)
-                    {
-                        toAlter.CustomIngredients.Add(new CustomIngredient(ingredient.IngredientId, true));
-                    }
-                    else
-                    {
-                        CustomIngredient customIngredient = toAlter.CustomIngredients.FirstOrDefault(x => x.IngredientId == ingredientId);
-                        if (customIngredient != null)
-                        {
-                            toAlter.CustomIngredients.Remove(customIngredient);
-                        }
-                    }
-
-                    HttpContext.Session.SerialiseCart(cart);
-                }
+                _cartService.AlterItem(HttpContext.Session, (int)ingredientId, add, cartItemId);
             }
+
             return ViewComponent("CartItemDetails", cartItemId);
         }
 
@@ -100,16 +60,7 @@ namespace PizzeriaDelish.Controllers
         [HttpPost]
         public ActionResult RemoveItem(Guid cartItemId)
         {
-            if (!HttpContext.Session.CartIsEmpty())
-            {
-                List<CartItem> cart = HttpContext.Session.DeserialiseCart();
-                CartItem cartItem = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
-                if (cartItem != null)
-                {
-                    cart.Remove(cartItem);
-                    HttpContext.Session.SerialiseCart(cart);
-                }
-            }
+            _cartService.RemoveItem(HttpContext.Session, cartItemId);
 
             return ViewComponent("Cart");
         }

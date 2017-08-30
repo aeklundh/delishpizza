@@ -37,6 +37,7 @@ namespace PizzeriaDelish
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<RoleManager<IdentityRole>>();
+            services.AddTransient<CartService>();
 
             services.AddMvc();
 
