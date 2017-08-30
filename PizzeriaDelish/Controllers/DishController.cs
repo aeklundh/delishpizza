@@ -25,8 +25,7 @@ namespace PizzeriaDelish.Controllers
         // GET: Dishes
         public async Task<IActionResult> Index()
         {
-            IndexViewModel vm = new IndexViewModel(await _context.Dishes.ToListAsync(), await _context.Categories.ToListAsync());
-            return View(vm);
+            return View(await _context.Dishes.Include(x => x.Category).ToListAsync());
         }
 
         // GET: Dishes/Details/5

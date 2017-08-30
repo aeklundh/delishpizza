@@ -6,40 +6,53 @@
 <div class="row">
     <div class="col-md-9">
         <div class="row">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Maträtt</th>
-                        <th>&nbsp;</th>
-                        <th>Pris</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (Dish dish in Model)
+            @{
+                List<Category> categories = new List<Category>();
+                foreach (Dish dish in Model)
+                {
+                    if (!categories.Contains(dish.Category))
                     {
-                        <tr>
-                            <td>
-                                <p>@dish.Name</p>
-                                <p>@dish.Description</p>
-                            </td>
-                            <td>
-                                <a class="btn btn-link"
-                                        asp-controller="Cart"
-                                        asp-action="AddToCart"
-                                        asp-route-dishId="@dish.DishId"
-                                        data-ajax="true"
-                                        data-ajax-mode="replace"
-                                        data-ajax-update="#cartWrap"
-                                        data-ajax-method="POST">
-                                    <span class="glyphicon glyphicon-shopping-cart">&nbsp;</span>
-                                </a>
-                            </td>
-                            <td>
-                                @dish.Price
-                            </td>
-                        </tr>
+                        categories.Add(dish.Category);
                     }
-                </tbody>
+                }
+            }
+            <table class="table table-striped">
+                @foreach (Category category in categories)
+                {
+                    <thead>
+                        <tr>
+                            <th>@category.Name</th>
+                            <th>&nbsp;</th>
+                            <th>Pris</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Dish dish in Model.Where(x => x.Category == category).OrderBy(x => x.Price).ThenBy(x => x.Name))
+                        {
+                            <tr>
+                                <td>
+                                    <p>@dish.Name</p>
+                                    <p>@dish.Description</p>
+                                </td>
+                                <td>
+                                    <a class="btn btn-link"
+                                       asp-controller="Cart"
+                                       asp-action="AddToCart"
+                                       asp-route-dishId="@dish.DishId"
+                                       data-ajax="true"
+                                       data-ajax-mode="replace"
+                                       data-ajax-update="#cartWrap"
+                                       data-ajax-method="POST">
+                                        <span class="glyphicon glyphicon-shopping-cart">&nbsp;</span>
+                                    </a>
+                                </td>
+                                <td>
+                                    @dish.Price
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
             </table>
         </div>
     </div>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PizzeriaDelish.Models;
 using PizzeriaDelish.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace PizzeriaDelish.Controllers
 {
@@ -20,7 +21,7 @@ namespace PizzeriaDelish.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Dishes.ToList());
+            return View(_context.Dishes.Include(x => x.Category).ToList());
         }
 
         public IActionResult About()

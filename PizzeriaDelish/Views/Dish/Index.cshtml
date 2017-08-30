@@ -1,4 +1,4 @@
-﻿@model PizzeriaDelish.Models.DishViewModels.IndexViewModel
+﻿@model List<PizzeriaDelish.Models.Dish>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,7 +31,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Dishes)
+@foreach (var item in Model.OrderBy(x => x.Category.Name).ThenBy(x => x.Price).ThenBy(x => x.Name))
 {
         <tr>
             <td>
@@ -44,7 +44,7 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Model.Categories.FirstOrDefault(x => x.CategoryId == item.CategoryId).Name
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Active)

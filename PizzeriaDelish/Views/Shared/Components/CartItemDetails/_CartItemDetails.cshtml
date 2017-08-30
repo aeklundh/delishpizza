@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Ingredient ingredient in Model.AvailableIngredients)
+            @foreach (Ingredient ingredient in Model.AvailableIngredients.OrderBy(x => x.Name))
             {
                 <tr>
                     <td>@ingredient.Name</td>
@@ -44,7 +44,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Ingredient ingredient in Model.AddedIngredients)
+            @foreach (Ingredient ingredient in Model.AddedIngredients.OrderBy(x => x.Name))
             {
                 <tr>
                     <td>@ingredient.Name</td>
