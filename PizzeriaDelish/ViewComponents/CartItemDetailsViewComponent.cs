@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Extensions;
 using PizzeriaDelish.Models;
@@ -26,6 +27,12 @@ namespace PizzeriaDelish.ViewComponents
             CartItem cartItem = HttpContext.Session.DeserialiseCart().FirstOrDefault(x => x.CartItemId == cartItemId);
             if (cartItem != null)
             {
+                Dish baseDish = _context.Dishes.Include(x => x.DishIngredients).FirstOrDefault(x => x.DishId == cartItem.Dish.DishId);
+                if (baseDish != null)
+                {
+                    cartItem.Dish.DishIngredients = baseDish.DishIngredients;
+                }
+
                 List<Ingredient> availableIngredients = _context.Ingredients.ToList();
                 List<Ingredient> addedIngredients = new List<Ingredient>();
                 foreach (CustomIngredient ingredient in cartItem.CustomIngredients)

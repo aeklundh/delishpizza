@@ -89,5 +89,30 @@ namespace PizzeriaDelish.Services
                 }
             }
         }
+
+        public int CalculatePrice(CartItem cartItem)
+        {
+            int sum = cartItem.Dish.Price;
+            List<Ingredient> ingredients = new List<Ingredient>();
+            Dish baseDish = _context.Dishes
+                .Include(x => x.DishIngredients)
+                .FirstOrDefault(x => x.DishId == cartItem.Dish.DishId);
+            if (baseDish != null)
+            {
+                foreach (CustomIngredient ci in cartItem.CustomIngredients.Where(x => x.IsAdded))
+                {
+                    if (baseDish.DishIngredients.FirstOrDefault(x => x.IngredientId == ci.IngredientId) == null)
+                    {
+                        Ingredient ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == ci.IngredientId);
+                        if (ingredient != null)
+                        {
+                            sum += ingredient.Price;
+                        }
+                    }
+                }
+            }
+
+            return sum;
+        }
     }
 }

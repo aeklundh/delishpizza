@@ -46,9 +46,10 @@ namespace PizzeriaDelish.Data
                 new Category() { Name = "Övrigt", Active = true }
             };
             List<Ingredient> ingredients = new List<Ingredient>() {
-                new Ingredient() { Name = "Skinka" },
-                new Ingredient() { Name = "Ananas" },
-                new Ingredient() { Name = "Champinjoner" }
+                new Ingredient() { Name = "Skinka", Price = 10 },
+                new Ingredient() { Name = "Ananas", Price = 10 },
+                new Ingredient() { Name = "Champinjoner", Price = 10 },
+                new Ingredient() { Name = "Oxfilé", Price = 15 }
             };
             List<Dish> dishes = new List<Dish>() {
                 new Dish() { Name = "Margherita", Price = 58, Description = "Den grundläggande pizzan, utan extra pålägg.", CategoryId = 1 },
