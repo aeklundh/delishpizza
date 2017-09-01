@@ -8,7 +8,8 @@
            data-ajax="true"
            data-ajax-mode="replace"
            data-ajax-update="#cartWrap"
-           data-ajax-method="GET">
+           data-ajax-method="GET"
+           onclick="$('#cartDetailsWrap').empty()">
             <span class="glyphicon glyphicon-remove">&nbsp;</span>
         </a>
     </div>
@@ -26,7 +27,7 @@
             {
                 <tr>
                     <td>@ingredient.Name</td>
-                    @if (Model.CartItem.Dish.DishIngredients.FirstOrDefault(x => x.IngredientId == ingredient.IngredientId) == null) 
+                    @if (Model.CartItem.Dish.DishIngredients.FirstOrDefault(x => x.IngredientId == ingredient.IngredientId) == null)
                     {
                         <td>@ingredient.Price</td>
                     }

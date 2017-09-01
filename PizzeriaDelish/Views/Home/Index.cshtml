@@ -56,7 +56,11 @@
             </table>
         </div>
     </div>
-    <div class="col-md-3" id="cartWrap">
-        @await Component.InvokeAsync("Cart")
+    <div class="col-md-3">
+        <div class="row" id="cartWrap">
+            @await Component.InvokeAsync("Cart")
+        </div>
+        <div class="row" id="cartDetailsWrap">
+        </div>
     </div>
 </div>
