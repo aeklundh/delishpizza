@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using PizzeriaDelish.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace PizzeriaDelish
 {
@@ -38,6 +39,9 @@ namespace PizzeriaDelish
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<RoleManager<IdentityRole>>();
             services.AddTransient<CartService>();
+            services.AddTransient<AddressService>();
+            services.AddTransient<CheckoutService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddMvc();
 
@@ -53,7 +57,7 @@ namespace PizzeriaDelish
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, WebshopDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, WebshopDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AddressService addressService)
         {
             if (env.IsDevelopment())
             {
@@ -79,7 +83,7 @@ namespace PizzeriaDelish
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            DbInitialiser.Initialise(context, userManager, roleManager);
+            DbInitialiser.Initialise(context, userManager, roleManager, addressService);
         }
     }
 }

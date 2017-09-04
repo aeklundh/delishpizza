@@ -1,0 +1,53 @@
+﻿@model List<CartItem>
+@inject PizzeriaDelish.Services.CartService _cartService
+@{
+    ViewData["Title"] = "Beställ";
+}
+
+<h2>Granska din varukorg</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @{
+                int total = 0;
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Maträtt</th>
+                            <th>Pris</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (CartItem cartItem in Model)
+                        {
+                            int itemPrice = _cartService.CalculatePrice(cartItem);
+                            <tr>
+                                <td>@cartItem.Dish.Name</td>
+                                <td>@itemPrice</td>
+                            </tr>
+                            total += itemPrice;
+                        }
+                        <tr>
+                            <td>Att betala:</td>
+                            <td><b>@total SEK</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-default">
+                Tillbaka till menyn
+            </a>
+            <a asp-controller="Checkout"
+               asp-action="DeliveryDetails"
+               class="btn btn-primary">
+                Fortsätt
+            </a>
+        </div>
+    </div>
+</div>

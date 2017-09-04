@@ -1,0 +1,58 @@
+﻿@model PaymentDetails
+
+<form asp-controller="Checkout" asp-action="Payment" method="post">
+    <div class="form-group">
+        <div asp-validation-summary="All">
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="NameOnCard" class="control-label"></label>
+        <input asp-for="NameOnCard" class="form-control" />
+        <span asp-validation-for="NameOnCard" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CardNumber" class="control-label"></label>
+        <input asp-for="CardNumber" class="form-control" />
+        <span asp-validation-for="CardNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="YearOfExpiration" class="control-label"></label>
+        <input asp-for="YearOfExpiration" class="form-control" />
+        <span asp-validation-for="YearOfExpiration" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MonthOfExpiration" class="control-label"></label>
+        <input asp-for="MonthOfExpiration" class="form-control" />
+        <span asp-validation-for="MonthOfExpiration" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Cvc" class="control-label"></label>
+        <input asp-for="Cvc" class="form-control" />
+        <span asp-validation-for="Cvc" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Address" class="control-label"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PostalCode" class="control-label"></label>
+        <input asp-for="PostalCode" class="form-control" />
+        <span asp-validation-for="PostalCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="City" class="control-label"></label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+    <a asp-controller="Checkout"
+       asp-action="Index"
+       class="btn btn-default">
+        Tillbaka
+    </a>
+    <input type="submit" value="Bekräfta betalning" class="btn btn-primary" />
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
