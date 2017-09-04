@@ -19,6 +19,14 @@ namespace PizzeriaDelish.Services
             _context = context;
         }
 
+        public List<CartItem> GetCart(ISession session)
+        {
+            if (!session.CartIsEmpty())
+                return session.DeserialiseCart();
+            else
+                return null;
+        }
+
         public void AddToCart(ISession session, int dishId)
         {
             Dish dish = _context.Dishes
@@ -112,6 +120,16 @@ namespace PizzeriaDelish.Services
                 }
             }
 
+            return sum;
+        }
+
+        public int CalculateTotalCartPrice(List<CartItem> cart)
+        {
+            int sum = 0;
+            foreach (CartItem cartItem in cart)
+            {
+                sum += CalculatePrice(cartItem);
+            }
             return sum;
         }
     }
