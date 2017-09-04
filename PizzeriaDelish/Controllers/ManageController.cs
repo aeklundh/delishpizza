@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using PizzeriaDelish.Models;
 using PizzeriaDelish.Models.ManageViewModels;
 using PizzeriaDelish.Services;
+using PizzeriaDelish.Data;
 
 namespace PizzeriaDelish.Controllers
 {
@@ -25,6 +26,8 @@ namespace PizzeriaDelish.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
+        private readonly AddressService _addressService;
+        private readonly WebshopDbContext _context;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -33,13 +36,17 @@ namespace PizzeriaDelish.Controllers
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          AddressService addressService,
+          WebshopDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _addressService = addressService;
+            _context = context;
         }
 
         [TempData]
@@ -53,6 +60,7 @@ namespace PizzeriaDelish.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
+            user.Address = _context.Addresses.FirstOrDefault(x => x.AddressId == user.AddressId);
 
             var model = new IndexViewModel
             {
@@ -97,10 +105,17 @@ namespace PizzeriaDelish.Controllers
                 }
             }
 
-            user.PostalCode = model.User.PostalCode;
-            user.City = model.User.City;
-            user.FirstName = model.User.FirstName;
-            user.Surname = model.User.Surname;
+            Address newAddress = await _addressService.AddAddressAsync(new Address()
+            {
+                City = model.User.Address.City,
+                PostalCode = model.User.Address.PostalCode,
+                StreetAddress = model.User.Address.StreetAddress,
+                FirstName = model.User.Address.FirstName,
+                Surname = model.User.Address.Surname
+            });
+
+            user.AddressId = newAddress.AddressId;
+
             await _userManager.UpdateAsync(user);
 
             StatusMessage = "Your profile has been updated";

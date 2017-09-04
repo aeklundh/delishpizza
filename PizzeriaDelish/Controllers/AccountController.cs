@@ -24,17 +24,20 @@ namespace PizzeriaDelish.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly AddressService _addressService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            AddressService addressService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _addressService = addressService;
         }
 
         [TempData]
@@ -220,14 +223,19 @@ namespace PizzeriaDelish.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                Address userAddress = await _addressService.AddAddressAsync(
+                        new Address() {
+                            City = model.City,
+                            StreetAddress = model.Address,
+                            PostalCode = model.PostalCode,
+                            FirstName = model.FirstName,
+                            Surname = model.Surname
+                        }
+                    );
                 var user = new ApplicationUser {
                     UserName = model.Email,
                     Email = model.Email,
-                    Address = model.Address,
-                    City = model.City,
-                    PostalCode = model.PostalCode,
-                    FirstName = model.FirstName,
-                    Surname = model.Surname,
+                    AddressId = userAddress.AddressId,
                     PhoneNumber = model.PhoneNumber
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);

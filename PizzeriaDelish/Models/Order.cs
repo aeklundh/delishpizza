@@ -10,19 +10,18 @@ namespace PizzeriaDelish.Models
     {
         public int OrderId { get; set; }
         [Required]
-        public Guid UserId { get; set; }
+        public int AddressId { get; set; }
         [Required]
         public DateTime OrderPlaced { get; set; }
         [Required]
         public bool Active { get; set; }
+        [Required]
+        public bool PaidByCard { get; set; }
+        [Required]
+        public string PhoneNumber { get; set; }
+        public string UserId { get; set; }
 
-        public Order()
-        {
-            OrderPlaced = DateTime.Now;
-            Active = true;
-        }
-
-        public ApplicationUser User { get; set; }
+        public Address DeliveryAddress { get; set; }
         public ICollection<DishOrder> DishOrders { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using PizzeriaDelish.Models;
+using PizzeriaDelish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,30 +10,37 @@ namespace PizzeriaDelish.Data
 {
     public static class DbInitialiser
     {
-        public static async void Initialise(WebshopDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async void Initialise(WebshopDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AddressService addressService)
         {
             IdentityRole adminRole = new IdentityRole() { Name = "Admin" };
             await roleManager.CreateAsync(adminRole);
+            Address seededUserAddress = await addressService.AddAddressAsync(new Address() {
+                StreetAddress = "Hemvägen 5",
+                City = "Huddinge",
+                PostalCode = "14140",
+                FirstName = "Ture",
+                Surname = "Testare"
+            });
+
+            Address adminUserAddress = await addressService.AddAddressAsync(new Address() {
+                StreetAddress = "Bortgången 3",
+                City = "Molnet",
+                PostalCode = "14141",
+                FirstName = "Admin",
+                Surname = "Admin"
+            });
 
             ApplicationUser seededUser = new ApplicationUser()
             {
                 UserName = "ture@test.net",
                 Email = "ture@test.net",
-                Address = "Hemvägen 5",
-                City = "Huddinge",
-                PostalCode = "14140",
-                FirstName = "Ture",
-                Surname = "Testare"
+                AddressId = seededUserAddress.AddressId
             };
             ApplicationUser adminUser = new ApplicationUser()
             {
                 UserName = "admin@delish.se",
                 Email = "admin@delish.se",
-                Address = "Bortgången 3",
-                City = "Molnet",
-                PostalCode = "14141",
-                FirstName = "Admin",
-                Surname = "Admin"
+                AddressId = adminUserAddress.AddressId
             };
             await userManager.CreateAsync(seededUser, "Test12#");
             await userManager.CreateAsync(adminUser, "PassWeCan2!");

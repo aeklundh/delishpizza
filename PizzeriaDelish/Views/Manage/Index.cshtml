@@ -31,14 +31,14 @@
                 <span asp-validation-for="User.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.FirstName"></label>
-                <input asp-for="User.FirstName" class="form-control" />
-                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+                <label asp-for="User.Address.FirstName"></label>
+                <input asp-for="User.Address.FirstName" class="form-control" />
+                <span asp-validation-for="User.Address.FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.Surname"></label>
-                <input asp-for="User.Surname" class="form-control" />
-                <span asp-validation-for="User.Surname" class="text-danger"></span>
+                <label asp-for="User.Address.Surname"></label>
+                <input asp-for="User.Address.Surname" class="form-control" />
+                <span asp-validation-for="User.Address.Surname" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="User.PhoneNumber"></label>
@@ -46,19 +46,19 @@
                 <span asp-validation-for="User.PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.Address"></label>
-                <input asp-for="User.Address" class="form-control" />
-                <span asp-validation-for="User.Address" class="text-danger"></span>
+                <label asp-for="User.Address.StreetAddress"></label>
+                <input asp-for="User.Address.StreetAddress" class="form-control" />
+                <span asp-validation-for="User.Address.StreetAddress" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.PostalCode"></label>
-                <input asp-for="User.PostalCode" class="form-control" />
-                <span asp-validation-for="User.PostalCode" class="text-danger"></span>
+                <label asp-for="User.Address.PostalCode"></label>
+                <input asp-for="User.Address.PostalCode" class="form-control" />
+                <span asp-validation-for="User.Address.PostalCode" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.City"></label>
-                <input asp-for="User.City" class="form-control" />
-                <span asp-validation-for="User.City" class="text-danger"></span>
+                <label asp-for="User.Address.City"></label>
+                <input asp-for="User.Address.City" class="form-control" />
+                <span asp-validation-for="User.Address.City" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">Save</button>
         </form>

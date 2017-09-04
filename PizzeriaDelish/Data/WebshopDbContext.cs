@@ -56,8 +56,8 @@ namespace PizzeriaDelish.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Category> Categories { get; set; }
-        //public DbSet<DishCategory> DishCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<CustomIngredient> CustomIngredients { get; set; }
+        public DbSet<Address> Addresses { get; set; }
     }
 }
