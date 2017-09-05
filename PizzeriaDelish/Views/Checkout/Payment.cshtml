@@ -5,9 +5,6 @@
 <h2>Betalning</h2>
 <div class="container">
     <div class="row">
-        <div class="col-md-8" id="paymentWrap">
-
-        </div>
         <div class="col-md-8">
             <a asp-controller="Checkout"
                asp-action="PaymentChoice"
@@ -18,10 +15,6 @@
             <a asp-controller="Checkout"
                asp-action="PaymentChoice"
                asp-route-payByCard="true"
-               data-ajax="true"
-               data-ajax-mode="replace"
-               data-ajax-update="#paymentWrap"
-               data-ajax-method="GET"
                class="btn btn-default">
                 Betala med kort
             </a>

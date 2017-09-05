@@ -49,7 +49,7 @@ namespace PizzeriaDelish.Models.AccountViewModels
         public string City { get; set; }
 
         [Required(ErrorMessage = "Postkoden måste vara fem tecken lång"),
-            StringLength(5, MinimumLength = 5, ErrorMessage = "Postkoden måste vara fem tecken lång"),
+            RegularExpression(@"^\d{5}", ErrorMessage = "Postkoden måste vara fem tecken"),
             Display(Name = "Postkod")]
         public string PostalCode { get; set; }
     }

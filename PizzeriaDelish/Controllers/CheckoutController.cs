@@ -46,13 +46,16 @@ namespace PizzeriaDelish.Controllers
 
         public async Task<IActionResult> DeliveryDetails()
         {
-            ApplicationUser user = null;
+            DeliveryDetailsViewModel vm = new DeliveryDetailsViewModel();
             if (_signInManager.IsSignedIn(User))
             {
-                user = await _userManager.GetUserAsync(User);
+                ApplicationUser user = await _userManager.GetUserAsync(User);
+                user.Address = _context.Addresses.FirstOrDefault(x => x.AddressId == user.AddressId);
+                vm.Address = user.Address;
+                vm.PhoneNumber = user.PhoneNumber;
             }
             
-            return View(user);
+            return View(vm);
         }
 
         [HttpPost]
@@ -105,7 +108,7 @@ namespace PizzeriaDelish.Controllers
         {
             if (payByCard)
             {
-                return PartialView("_CardDetailsInputPartial");
+                return View("CardDetails");
             }
             else
             {

@@ -17,7 +17,7 @@ namespace PizzeriaDelish.Models
         public string StreetAddress { get; set; }
         [Required(ErrorMessage = "Du måste skriva in din ort"), Display(Name = "Ort"), MaxLength(50)]
         public string City { get; set; }
-        [Required(ErrorMessage = "Du måste skriva i din postkod"), StringLength(5, MinimumLength = 5, ErrorMessage = "Postkoden måste vara fem tecken lång"), Display(Name = "Postkod")]
+        [Required(ErrorMessage = "Du måste skriva i din postkod"), RegularExpression(@"^\d{5}", ErrorMessage = "Postkoden måste vara fem siffror utan mellanslag (ex. 14144)"), Display(Name = "Postkod")]
         public string PostalCode { get; set; }
     }
 }
