@@ -89,7 +89,7 @@ namespace PizzeriaDelish.Controllers
             if (ModelState.IsValid)
             {
                 //verify payment with 3rd party for total:
-                int total = _cartService.CalculateTotalCartPrice(_cartService.GetCart(HttpContext.Session));
+                int total = _cartService.CalculateTotalCartPrice(_cartService.GetCart());
 
                 //if valid payment
                 await CreateOrderAsync(true);
@@ -117,7 +117,7 @@ namespace PizzeriaDelish.Controllers
         private async Task CreateOrderAsync(bool payByCard)
         {
             //get cart, delivery address, phone number
-            List<CartItem> cart = _cartService.GetCart(HttpContext.Session);
+            List<CartItem> cart = _cartService.GetCart();
 
             //fetch address from temporary storage and create a db entry
             Address address = _checkoutService.GetAddressFromSession();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Extensions;
 using PizzeriaDelish.Models;
@@ -13,21 +14,23 @@ namespace PizzeriaDelish.Services
     public class CartService
     {
         private readonly WebshopDbContext _context;
+        private readonly ISession _session;
 
-        public CartService(WebshopDbContext context)
+        public CartService(WebshopDbContext context, IServiceProvider serviceProvider)
         {
             _context = context;
+            _session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
         }
 
-        public List<CartItem> GetCart(ISession session)
+        public List<CartItem> GetCart()
         {
-            if (!session.CartIsEmpty())
-                return session.DeserialiseCart();
+            if (!_session.CartIsEmpty())
+                return _session.DeserialiseCart();
             else
                 return null;
         }
 
-        public void AddToCart(ISession session, int dishId)
+        public void AddToCart(int dishId)
         {
             Dish dish = _context.Dishes
                 .Include(x => x.DishIngredients)
@@ -43,26 +46,26 @@ namespace PizzeriaDelish.Services
                     addedIngredients.Add(new CustomIngredient(dishIngredient.IngredientId, true));
                 }
                 addItem.CustomIngredients.AddRange(addedIngredients);
-                if (session.CartIsEmpty())
+                if (_session.CartIsEmpty())
                 {
                     cart = new List<CartItem>() { addItem };
                 }
                 else
                 {
-                    cart = session.DeserialiseCart();
+                    cart = _session.DeserialiseCart();
                     cart.Add(addItem);
                 }
-                session.SerialiseCart(cart);
+                _session.SerialiseCart(cart);
             }
         }
 
-        public void AlterItem(ISession session, int ingredientId, bool add, Guid cartItemId)
+        public void AlterItem(int ingredientId, bool add, Guid cartItemId)
         {
             Ingredient ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == ingredientId);
 
-            if (ingredient != null && !session.CartIsEmpty())
+            if (ingredient != null && !_session.CartIsEmpty())
             {
-                List<CartItem> cart = session.DeserialiseCart();
+                List<CartItem> cart = _session.DeserialiseCart();
                 CartItem toAlter = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
                 if (toAlter != null)
                 {
@@ -79,7 +82,7 @@ namespace PizzeriaDelish.Services
                         }
                     }
 
-                    session.SerialiseCart(cart);
+                    _session.SerialiseCart(cart);
                 }
             }
         }

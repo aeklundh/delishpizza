@@ -33,7 +33,7 @@ namespace PizzeriaDelish.Controllers
         [HttpPost]
         public ActionResult AddToCart(int dishId)
         {
-            _cartService.AddToCart(HttpContext.Session, dishId);
+            _cartService.AddToCart(dishId);
 
             return ViewComponent("Cart");
         }
@@ -50,7 +50,7 @@ namespace PizzeriaDelish.Controllers
         {
             if (ingredientId != null)
             {
-                _cartService.AlterItem(HttpContext.Session, (int)ingredientId, add, cartItemId);
+                _cartService.AlterItem((int)ingredientId, add, cartItemId);
             }
 
             return ViewComponent("CartItemDetails", cartItemId);
