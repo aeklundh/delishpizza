@@ -1,0 +1,86 @@
+﻿@model PizzeriaDelish.Models.CheckoutViewModels.OrderVerificationViewModel
+@inject PizzeriaDelish.Services.CartService _cartService
+@{
+    ViewData["Title"] = "Bekräfta order";
+}
+
+<h2>Bekräfta order</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @{
+                int total = 0;
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Maträtt</th>
+                            <th>Pris</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (CartItem cartItem in Model.Cart)
+                        {
+                            int itemPrice = _cartService.CalculatePrice(cartItem);
+                            <tr>
+                                <td>@cartItem.Dish.Name</td>
+                                <td>@itemPrice</td>
+                            </tr>
+                            total += itemPrice;
+                        }
+                        <tr>
+                            <td>Att betala:</td>
+                            <td><b>@total SEK</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-condensed">
+                <tr>
+                    <td><label asp-for="DeliveryAddress.FirstName"></label></td>
+                    <td>@Model.DeliveryAddress.FirstName</td>
+                </tr>
+                <tr>
+                    <td><label asp-for="DeliveryAddress.Surname"></label></td>
+                    <td>@Model.DeliveryAddress.Surname</td>
+                </tr>
+                <tr>
+                    <td><label asp-for="DeliveryAddress.StreetAddress"></label></td>
+                    <td>@Model.DeliveryAddress.StreetAddress</td>
+                </tr>
+                <tr>
+                    <td><label asp-for="DeliveryAddress.PostalCode"></label></td>
+                    <td>@Model.DeliveryAddress.PostalCode</td>
+                </tr>
+                <tr>
+                    <td><label asp-for="DeliveryAddress.City"></label></td>
+                    <td>@Model.DeliveryAddress.City</td>
+                </tr>
+                <tr>
+                    <td><label asp-for="PhoneNumber"></label></td>
+                    <td>@Model.PhoneNumber</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <a asp-controller="Checkout"
+               asp-action="PaymentChoice"
+               asp-route-payByCard="false"
+               class="btn btn-default">
+                Betala kontant vid leverans
+            </a>
+            <a asp-controller="Checkout"
+               asp-action="PaymentChoice"
+               asp-route-payByCard="true"
+               class="btn btn-default">
+                Betala med kort
+            </a>
+        </div>
+    </div>
+</div>

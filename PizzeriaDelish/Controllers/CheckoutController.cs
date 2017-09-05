@@ -36,7 +36,7 @@ namespace PizzeriaDelish.Controllers
         {
             if (!HttpContext.Session.CartIsEmpty())
             {
-                return View(HttpContext.Session.DeserialiseCart());
+                return RedirectToAction(nameof(DeliveryDetails));
             }
             else
             {
@@ -67,7 +67,7 @@ namespace PizzeriaDelish.Controllers
                 _checkoutService.SetAddressInSession(vm.Address);
                 _checkoutService.SetPhoneNumberInSession(vm.PhoneNumber);
 
-                return RedirectToAction(nameof(Payment));
+                return RedirectToAction(nameof(OrderVerification));
             }
             else
             {
@@ -75,14 +75,25 @@ namespace PizzeriaDelish.Controllers
             }
         }
 
-        public IActionResult Payment()
+        public IActionResult OrderVerification()
         {
-            if (_checkoutService.GetAddressFromSession() == null || String.IsNullOrEmpty(_checkoutService.GetPhoneNumberFromSession()))
+            List<CartItem> cart = _cartService.GetCart();
+            string phoneNumber = _checkoutService.GetPhoneNumberFromSession();
+            Address address = _checkoutService.GetAddressFromSession();
+
+            if (cart == null || String.IsNullOrEmpty(phoneNumber) || address == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            OrderVerificationViewModel vm = new OrderVerificationViewModel()
+            {
+                Cart = cart,
+                PhoneNumber = phoneNumber,
+                DeliveryAddress = address
+            };
+
+            return View(vm);
         }
 
         [HttpPost]
@@ -96,11 +107,11 @@ namespace PizzeriaDelish.Controllers
 
                 //if valid payment
                 await CreateOrderAsync(true);
-                return View("OrderConfirmed");
+                return View("OrderConfirmation");
             }
             else
             {
-                return RedirectToAction(nameof(Payment));
+                return View("CardDetails");
             }
         }
 
@@ -113,7 +124,7 @@ namespace PizzeriaDelish.Controllers
             else
             {
                 await CreateOrderAsync(false);
-                return View("OrderConfirmed");
+                return View("OrderConfirmation");
             }
         }
 
@@ -127,6 +138,7 @@ namespace PizzeriaDelish.Controllers
             address = await _addressService.AddAddressAsync(address);
 
             await _checkoutService.CreateOrderAsync(cart, address, payByCard);
+            _cartService.EmptyCart();
         }
     }
 }

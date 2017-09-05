@@ -30,6 +30,11 @@ namespace PizzeriaDelish.Services
                 return null;
         }
 
+        public void EmptyCart()
+        {
+            _session.SetString("cart", null);
+        }
+
         public void AddToCart(int dishId)
         {
             Dish dish = _context.Dishes
