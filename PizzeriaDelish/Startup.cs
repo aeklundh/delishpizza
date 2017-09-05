@@ -38,8 +38,9 @@ namespace PizzeriaDelish
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<RoleManager<IdentityRole>>();
-            services.AddTransient<CartService>();
             services.AddTransient<AddressService>();
+            services.AddTransient<AdminService>();
+            services.AddTransient<CartService>();
             services.AddTransient<CheckoutService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

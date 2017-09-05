@@ -9,6 +9,7 @@ using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using Microsoft.AspNetCore.Authorization;
 using PizzeriaDelish.Models.DishViewModels;
+using PizzeriaDelish.Services;
 
 namespace PizzeriaDelish.Controllers
 {
@@ -16,10 +17,12 @@ namespace PizzeriaDelish.Controllers
     public class DishController : Controller
     {
         private readonly WebshopDbContext _context;
+        private readonly AdminService _adminService;
 
-        public DishController(WebshopDbContext context)
+        public DishController(WebshopDbContext context, AdminService adminService)
         {
             _context = context;
+            _adminService = adminService;
         }
 
         // GET: Dishes
@@ -87,7 +90,7 @@ namespace PizzeriaDelish.Controllers
         // POST: Dishes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditViewModel vm) //int id, [Bind("DishId,Name,Description,Price,CategoryId,Active")] Dish dish, List<Ingredient> selectedIngredients
+        public async Task<IActionResult> Edit(int id, EditViewModel vm)
         {
             if (id != vm.Dish.DishId)
             {
@@ -98,16 +101,7 @@ namespace PizzeriaDelish.Controllers
             {
                 try
                 {
-                    _context.Update(vm.Dish);
-                    await _context.SaveChangesAsync();
-
-                    //remove old DishIngredients
-                    List<DishIngredient> dishIngredients = _context.DishIngredients.Where(di => di.DishId == vm.Dish.DishId).ToList();
-                    _context.DishIngredients.RemoveRange(dishIngredients);
-                    await _context.SaveChangesAsync();
-
-                    //create and add new DishIngredients
-                    dishIngredients = new List<DishIngredient>();
+                    List<DishIngredient> dishIngredients = new List<DishIngredient>();
                     foreach (SelectListItem ingredient in vm.Ingredients)
                     {
                         if (ingredient.Selected)
@@ -117,8 +111,7 @@ namespace PizzeriaDelish.Controllers
                                 dishIngredients.Add(new DishIngredient() { DishId = vm.Dish.DishId, IngredientId = i.IngredientId });
                         }
                     }
-                    _context.DishIngredients.AddRange(dishIngredients);
-                    await _context.SaveChangesAsync();
+                    await _adminService.UpdateDishAsync(vm.Dish, dishIngredients);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
