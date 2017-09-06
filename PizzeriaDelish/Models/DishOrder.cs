@@ -16,5 +16,6 @@ namespace PizzeriaDelish.Models
 
         public Dish Dish { get; set; }
         public Order Order { get; set; }
+        public List<DishOrderIngredient> CustomIngredients { get; set; }
     }
 }

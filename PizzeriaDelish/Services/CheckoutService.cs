@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Extensions;
@@ -50,14 +51,49 @@ namespace PizzeriaDelish.Services
                 PaidByCard = paidByCard, 
                 OrderPlaced = DateTime.Now,
                 Active = true,
-                PhoneNumber = GetPhoneNumberFromSession()
+                PhoneNumber = GetPhoneNumberFromSession(),
+                DishOrders = new List<DishOrder>()
             };
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
             //create dishOrders and attach to order
+            List<DishOrder> dishOrders = new List<DishOrder>();
+            foreach (CartItem ci in cart)
+            {
+                Dish dish = _context.Dishes.Include(x => x.DishIngredients).ThenInclude(x => x.Ingredient).FirstOrDefault(x => x.DishId == ci.Dish.DishId);
+                if (dish != null)
+                {
+                    DishOrder dishOrder = new DishOrder()
+                    {
+                        Amount = 1,
+                        DishId = ci.Dish.DishId,
+                        OrderId = order.OrderId,
+                        CustomIngredients = new List<DishOrderIngredient>()
+                    };
 
-            throw new NotImplementedException();
+                    //create dishorderingredients
+                    List<Ingredient> originalIngredients = new List<Ingredient>();
+                    dish.DishIngredients.ToList().ForEach(x => originalIngredients.Add(x.Ingredient));
+
+                    List<Ingredient> removed = originalIngredients.Except(ci.Ingredients).ToList();
+                    List<Ingredient> added = ci.Ingredients.Except(originalIngredients).ToList();
+
+                    removed.ForEach(x => dishOrder.CustomIngredients.Add(new DishOrderIngredient() {
+                        IngredientId = x.IngredientId,
+                        IsAdded = false
+                    }));
+                    added.ForEach(x => dishOrder.CustomIngredients.Add(new DishOrderIngredient() {
+                        IngredientId = x.IngredientId,
+                        IsAdded = true
+                    }));
+
+                    dishOrders.Add(dishOrder);
+                }
+            }
+
+            order.DishOrders.ToList().AddRange(dishOrders);
+            await _context.SaveChangesAsync();
         }
     }
 }

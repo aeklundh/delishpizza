@@ -35,7 +35,7 @@ namespace PizzeriaDelish.ViewComponents
 
                 List<Ingredient> availableIngredients = _context.Ingredients.ToList();
                 List<Ingredient> addedIngredients = new List<Ingredient>();
-                foreach (CustomIngredient ingredient in cartItem.CustomIngredients)
+                foreach (Ingredient ingredient in cartItem.Ingredients)
                 {
                     availableIngredients.RemoveAll(x => x.IngredientId == ingredient.IngredientId);
                     addedIngredients.Add(_context.Ingredients.FirstOrDefault(x => x.IngredientId == ingredient.IngredientId));

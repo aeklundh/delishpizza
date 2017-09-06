@@ -32,7 +32,7 @@ namespace PizzeriaDelish.Services
 
         public void EmptyCart()
         {
-            _session.SetString("cart", null);
+            _session.SetString("cart", String.Empty);
         }
 
         public void AddToCart(int dishId)
@@ -43,14 +43,18 @@ namespace PizzeriaDelish.Services
                 .FirstOrDefault(x => x.DishId == dishId);
             if (dish != null)
             {
-                List<CartItem> cart;
-                CartItem addItem = new CartItem(dish) { CartItemId = Guid.NewGuid() };
-                List<CustomIngredient> addedIngredients = new List<CustomIngredient>();
-                foreach (DishIngredient dishIngredient in dish.DishIngredients)
+                List<Ingredient> ingredients = new List<Ingredient>();
+                foreach (DishIngredient di in dish.DishIngredients)
                 {
-                    addedIngredients.Add(new CustomIngredient(dishIngredient.IngredientId, true));
+                    ingredients.Add(di.Ingredient);
                 }
-                addItem.CustomIngredients.AddRange(addedIngredients);
+
+                List<CartItem> cart;
+                CartItem addItem = new CartItem(dish) {
+                    CartItemId = Guid.NewGuid(),
+                    Ingredients = ingredients
+                };
+
                 if (_session.CartIsEmpty())
                 {
                     cart = new List<CartItem>() { addItem };
@@ -75,17 +79,9 @@ namespace PizzeriaDelish.Services
                 if (toAlter != null)
                 {
                     if (add)
-                    {
-                        toAlter.CustomIngredients.Add(new CustomIngredient(ingredient.IngredientId, true));
-                    }
+                        toAlter.Ingredients.Add(ingredient);
                     else
-                    {
-                        CustomIngredient customIngredient = toAlter.CustomIngredients.FirstOrDefault(x => x.IngredientId == ingredientId);
-                        if (customIngredient != null)
-                        {
-                            toAlter.CustomIngredients.Remove(customIngredient);
-                        }
-                    }
+                        toAlter.Ingredients.RemoveAll(x => x.IngredientId == ingredientId);
 
                     _session.SerialiseCart(cart);
                 }
@@ -115,11 +111,11 @@ namespace PizzeriaDelish.Services
                 .FirstOrDefault(x => x.DishId == cartItem.Dish.DishId);
             if (baseDish != null)
             {
-                foreach (CustomIngredient ci in cartItem.CustomIngredients.Where(x => x.IsAdded))
+                foreach (Ingredient i in cartItem.Ingredients)
                 {
-                    if (baseDish.DishIngredients.FirstOrDefault(x => x.IngredientId == ci.IngredientId) == null)
+                    if (baseDish.DishIngredients.FirstOrDefault(x => x.IngredientId == i.IngredientId) == null)
                     {
-                        Ingredient ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == ci.IngredientId);
+                        Ingredient ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == i.IngredientId);
                         if (ingredient != null)
                         {
                             sum += ingredient.Price;

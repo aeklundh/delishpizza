@@ -43,7 +43,7 @@ namespace PizzeriaDelish.Data
                 .HasForeignKey(dor => dor.OrderId);
 
             //set customingredient key
-            builder.Entity<CustomIngredient>()
+            builder.Entity<DishOrderIngredient>()
                 .HasKey(ci => new { ci.DishOrderId, ci.IngredientId });
 
             base.OnModelCreating(builder);
@@ -57,7 +57,7 @@ namespace PizzeriaDelish.Data
         public DbSet<DishIngredient> DishIngredients { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<CustomIngredient> CustomIngredients { get; set; }
+        public DbSet<DishOrderIngredient> CustomIngredients { get; set; }
         public DbSet<Address> Addresses { get; set; }
     }
 }
