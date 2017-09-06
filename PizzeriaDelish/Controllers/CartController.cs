@@ -60,7 +60,7 @@ namespace PizzeriaDelish.Controllers
         [HttpPost]
         public ActionResult RemoveItem(Guid cartItemId)
         {
-            _cartService.RemoveItem(HttpContext.Session, cartItemId);
+            _cartService.RemoveItem(cartItemId);
 
             return ViewComponent("Cart");
         }

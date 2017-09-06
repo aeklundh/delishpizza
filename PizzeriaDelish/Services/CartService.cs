@@ -92,16 +92,16 @@ namespace PizzeriaDelish.Services
             }
         }
 
-        public void RemoveItem(ISession session, Guid cartItemId)
+        public void RemoveItem(Guid cartItemId)
         {
-            if (!session.CartIsEmpty())
+            if (!_session.CartIsEmpty())
             {
-                List<CartItem> cart = session.DeserialiseCart();
+                List<CartItem> cart = _session.DeserialiseCart();
                 CartItem cartItem = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
                 if (cartItem != null)
                 {
                     cart.Remove(cartItem);
-                    session.SerialiseCart(cart);
+                    _session.SerialiseCart(cart);
                 }
             }
         }
