@@ -12,7 +12,7 @@ namespace PizzeriaDelish.Services
     {
         private readonly WebshopDbContext _context;
 
-        public AddressService(WebshopDbContext context, UserManager<ApplicationUser> userManager)
+        public AddressService(WebshopDbContext context)
         {
             _context = context;
         }
