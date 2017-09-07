@@ -26,21 +26,16 @@ namespace PizzeriaDelish.Services
                                     x.FirstName == address.FirstName &&
                                     x.Surname == address.Surname);
 
-            if (dbAddress == null)
+            if (dbAddress != null)
+            {
+                return dbAddress;
+            }
+            else
             {
                 _context.Addresses.Add(address);
                 await _context.SaveChangesAsync();
 
-                return _context.Addresses.FirstOrDefault(
-                    x => x.City == address.City &&
-                    x.PostalCode == address.PostalCode &&
-                    x.StreetAddress == address.StreetAddress &&
-                    x.FirstName == address.FirstName &&
-                    x.Surname == address.Surname);
-            }
-            else
-            {
-                return dbAddress;
+                return address;
             }
         }
     }
