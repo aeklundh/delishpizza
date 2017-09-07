@@ -11,12 +11,10 @@ namespace PizzeriaDelish.Services
     public class AddressService
     {
         private readonly WebshopDbContext _context;
-        UserManager<ApplicationUser> _userManager;
 
         public AddressService(WebshopDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         public async Task<Address> AddAddressAsync(Address address)
