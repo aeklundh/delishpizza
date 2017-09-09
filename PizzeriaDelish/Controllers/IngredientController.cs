@@ -54,7 +54,7 @@ namespace PizzeriaDelish.Controllers
         // POST: Ingredient/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IngredientId,Name")] Ingredient ingredient)
+        public async Task<IActionResult> Create([Bind("IngredientId,Name,Price")] Ingredient ingredient)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace PizzeriaDelish.Controllers
         // POST: Ingredient/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IngredientId,Name")] Ingredient ingredient)
+        public async Task<IActionResult> Edit(int id, [Bind("IngredientId,Name,Price")] Ingredient ingredient)
         {
             if (id != ingredient.IngredientId)
             {
