@@ -129,7 +129,7 @@ namespace PizzeriaDelish.Services
                 List<Ingredient> ingredients = new List<Ingredient>();
                 foreach (DishIngredient di in dish.DishIngredients)
                     ingredients.Add(di.Ingredient);
-                return new CartItem(dish) { CartItemId = new Guid(), Ingredients = ingredients };
+                return new CartItem(dish) { CartItemId = Guid.NewGuid(), Ingredients = ingredients };
             }
             else
                 return null;
