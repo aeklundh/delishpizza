@@ -16,10 +16,10 @@ namespace PizzeriaDelish.Services
         private readonly WebshopDbContext _context;
         private readonly ISession _session;
 
-        public CheckoutService(WebshopDbContext context, IServiceProvider serviceProvider)
+        public CheckoutService(WebshopDbContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
-            _session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
+            _session = contextAccessor.HttpContext.Session;
         }
 
         public void SetAddressInSession(Address address)

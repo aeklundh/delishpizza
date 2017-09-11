@@ -16,10 +16,9 @@ namespace PizzeriaDelish.Services
         private readonly WebshopDbContext _context;
         private readonly ISession _session;
 
-        public CartService(WebshopDbContext context, IHttpContextAccessor contextAccessor) // IServiceProvider serviceProvider
+        public CartService(WebshopDbContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
-            //_session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
             _session = contextAccessor.HttpContext.Session;
         }
 
