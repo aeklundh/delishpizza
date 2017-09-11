@@ -1,6 +1,5 @@
 ﻿@model PizzeriaDelish.Models.CheckoutViewModels.DeliveryDetailsViewModel
 
-
 @{
     ViewData["Title"] = "Leveransadress";
 }
@@ -45,10 +44,10 @@
                     <input asp-for="PhoneNumber" class="form-control" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
-                <a asp-controller="Checkout"
+                <a asp-controller="Home"
                    asp-action="Index"
                    class="btn btn-default">
-                    Tillbaka
+                    Tillbaka till menyn
                 </a>
                 <input type="submit" value="Fortsätt till betalning" class="btn btn-primary" />
             </form>
