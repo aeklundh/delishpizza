@@ -12,7 +12,9 @@ namespace PizzeriaDelishTests
     public abstract class BaseTest
     {
         protected readonly IServiceProvider _serviceProvider;
-
+        protected readonly HttpContextAccessor _httpContextAccessor;
+        protected WebshopDbContext _context { get; set; }
+        
         protected BaseTest()
         {
             ServiceProvider efServiceProvider = new ServiceCollection()
@@ -21,21 +23,20 @@ namespace PizzeriaDelishTests
 
             ServiceCollection services = new ServiceCollection();
             services.AddDbContext<WebshopDbContext>(b =>
-                b.UseInMemoryDatabase("dejtabaes")
+                b.UseInMemoryDatabase("database")
                 .UseInternalServiceProvider(efServiceProvider));
 
             services.AddTransient<AddressService>();
             services.AddTransient<AdminService>();
-            services.AddTransient<CartService>();
-            services.AddTransient<CheckoutService>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             _serviceProvider = services.BuildServiceProvider();
+
+            _httpContextAccessor = new HttpContextAccessor() { HttpContext = new DefaultHttpContext() };
+            _httpContextAccessor.HttpContext.Session = new TestSession();
 
             InitialiseDatabase();
         }
 
-        protected virtual void InitialiseDatabase()
-        { }
+        protected virtual void InitialiseDatabase() => _context = _serviceProvider.GetService<WebshopDbContext>();
     }
 }
