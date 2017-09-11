@@ -74,10 +74,12 @@ namespace PizzeriaDelish.Services
 
                     //create dishorderingredients
                     List<Ingredient> originalIngredients = new List<Ingredient>();
-                    dish.DishIngredients.ToList().ForEach(x => originalIngredients.Add(x.Ingredient));
+                    foreach (DishIngredient di in dish.DishIngredients)
+                        originalIngredients.Add(di.Ingredient);
 
-                    List<Ingredient> removed = originalIngredients.Except(ci.Ingredients).ToList();
-                    List<Ingredient> added = ci.Ingredients.Except(originalIngredients).ToList();
+                    //compare original dish's ingredients with cartItem's
+                    List<Ingredient> added = ci.Ingredients.Where(cii => !originalIngredients.Any(oii => cii.IngredientId == oii.IngredientId)).ToList();
+                    List<Ingredient> removed = originalIngredients.Where(oii => !ci.Ingredients.Any(cii => oii.IngredientId == cii.IngredientId)).ToList();
 
                     removed.ForEach(x => dishOrder.CustomIngredients.Add(new DishOrderIngredient() {
                         IngredientId = x.IngredientId,
@@ -88,7 +90,17 @@ namespace PizzeriaDelish.Services
                         IsAdded = true
                     }));
 
-                    dishOrders.Add(dishOrder);
+                    //find if there already is an identical dishOrder. If so, increase its count
+                    DishOrder identical = dishOrders.FirstOrDefault(dshOrds =>
+                        dshOrds.DishId == dish.DishId
+                        && !dshOrds.CustomIngredients.Where(cii => !dishOrder.CustomIngredients.Any(di => cii.IngredientId == di.IngredientId)).Any()
+                        && !dishOrder.CustomIngredients.Where(cii => !dshOrds.CustomIngredients.Any(di => cii.IngredientId == di.IngredientId)).Any()
+                    );
+
+                    if (identical != null)
+                        identical.Amount++;
+                    else
+                        dishOrders.Add(dishOrder);
                 }
             }
 
