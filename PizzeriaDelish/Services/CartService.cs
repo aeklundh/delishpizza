@@ -16,10 +16,11 @@ namespace PizzeriaDelish.Services
         private readonly WebshopDbContext _context;
         private readonly ISession _session;
 
-        public CartService(WebshopDbContext context, IServiceProvider serviceProvider)
+        public CartService(WebshopDbContext context, IHttpContextAccessor contextAccessor) // IServiceProvider serviceProvider
         {
             _context = context;
-            _session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
+            //_session = serviceProvider.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
+            _session = contextAccessor.HttpContext.Session;
         }
 
         public List<CartItem> GetCart()
@@ -35,37 +36,21 @@ namespace PizzeriaDelish.Services
             _session.SetString("cart", String.Empty);
         }
 
-        public void AddToCart(int dishId)
+        public async void AddToCart(int dishId)
         {
-            Dish dish = _context.Dishes
-                .Include(x => x.DishIngredients)
-                .ThenInclude(x => x.Ingredient)
-                .FirstOrDefault(x => x.DishId == dishId);
-            if (dish != null)
+            CartItem addItem = await CreateCartItemAsync(dishId);
+
+            List<CartItem> cart;
+            if (_session.CartIsEmpty())
             {
-                List<Ingredient> ingredients = new List<Ingredient>();
-                foreach (DishIngredient di in dish.DishIngredients)
-                {
-                    ingredients.Add(di.Ingredient);
-                }
-
-                List<CartItem> cart;
-                CartItem addItem = new CartItem(dish) {
-                    CartItemId = Guid.NewGuid(),
-                    Ingredients = ingredients
-                };
-
-                if (_session.CartIsEmpty())
-                {
-                    cart = new List<CartItem>() { addItem };
-                }
-                else
-                {
-                    cart = _session.DeserialiseCart();
-                    cart.Add(addItem);
-                }
-                _session.SerialiseCart(cart);
+                cart = new List<CartItem>() { addItem };
             }
+            else
+            {
+                cart = _session.DeserialiseCart();
+                cart.Add(addItem);
+            }
+            _session.SerialiseCart(cart);
         }
 
         public void AlterItem(int ingredientId, bool add, Guid cartItemId)
@@ -135,6 +120,20 @@ namespace PizzeriaDelish.Services
                 sum += CalculatePrice(cartItem);
             }
             return sum;
+        }
+
+        public async Task<CartItem> CreateCartItemAsync(int dishId)
+        {
+            Dish dish = await _context.Dishes.Include(x => x.DishIngredients).ThenInclude(x => x.Ingredient).SingleOrDefaultAsync(x => x.DishId == dishId);
+            if (dish != null)
+            {
+                List<Ingredient> ingredients = new List<Ingredient>();
+                foreach (DishIngredient di in dish.DishIngredients)
+                    ingredients.Add(di.Ingredient);
+                return new CartItem(dish) { CartItemId = new Guid(), Ingredients = ingredients };
+            }
+            else
+                return null;
         }
     }
 }
