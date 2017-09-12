@@ -104,7 +104,7 @@ namespace PizzeriaDelish.Services
                 }
             }
 
-            order.DishOrders.ToList().AddRange(dishOrders);
+            dishOrders.ForEach(x => order.DishOrders.Add(x));
             await _context.SaveChangesAsync();
         }
     }
