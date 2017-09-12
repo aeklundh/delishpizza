@@ -69,7 +69,7 @@ namespace PizzeriaDelish.Services
                         Amount = 1,
                         DishId = ci.Dish.DishId,
                         OrderId = order.OrderId,
-                        CustomIngredients = new List<DishOrderIngredient>()
+                        DishOrderIngredients = new List<DishOrderIngredient>()
                     };
 
                     //create dishorderingredients
@@ -81,11 +81,11 @@ namespace PizzeriaDelish.Services
                     List<Ingredient> added = ci.Ingredients.Where(cii => !originalIngredients.Any(oii => cii.IngredientId == oii.IngredientId)).ToList();
                     List<Ingredient> removed = originalIngredients.Where(oii => !ci.Ingredients.Any(cii => oii.IngredientId == cii.IngredientId)).ToList();
 
-                    removed.ForEach(x => dishOrder.CustomIngredients.Add(new DishOrderIngredient() {
+                    removed.ForEach(x => dishOrder.DishOrderIngredients.Add(new DishOrderIngredient() {
                         IngredientId = x.IngredientId,
                         IsAdded = false
                     }));
-                    added.ForEach(x => dishOrder.CustomIngredients.Add(new DishOrderIngredient() {
+                    added.ForEach(x => dishOrder.DishOrderIngredients.Add(new DishOrderIngredient() {
                         IngredientId = x.IngredientId,
                         IsAdded = true
                     }));
@@ -93,8 +93,8 @@ namespace PizzeriaDelish.Services
                     //find if there already is an identical dishOrder. If so, increase its count
                     DishOrder identical = dishOrders.FirstOrDefault(dshOrds =>
                         dshOrds.DishId == dish.DishId
-                        && !dshOrds.CustomIngredients.Where(cii => !dishOrder.CustomIngredients.Any(di => cii.IngredientId == di.IngredientId)).Any()
-                        && !dishOrder.CustomIngredients.Where(cii => !dshOrds.CustomIngredients.Any(di => cii.IngredientId == di.IngredientId)).Any()
+                        && !dshOrds.DishOrderIngredients.Where(cii => !dishOrder.DishOrderIngredients.Any(di => cii.IngredientId == di.IngredientId)).Any()
+                        && !dishOrder.DishOrderIngredients.Where(cii => !dshOrds.DishOrderIngredients.Any(di => cii.IngredientId == di.IngredientId)).Any()
                     );
 
                     if (identical != null)
