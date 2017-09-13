@@ -62,7 +62,7 @@ namespace PizzeriaDelish.Services
                 CartItem toAlter = cart.FirstOrDefault(x => x.CartItemId == cartItemId);
                 if (toAlter != null)
                 {
-                    if (add)
+                    if (add && toAlter.Ingredients.FirstOrDefault(x => x.IngredientId == ingredientId) == null)
                         toAlter.Ingredients.Add(ingredient);
                     else
                         toAlter.Ingredients.RemoveAll(x => x.IngredientId == ingredientId);
