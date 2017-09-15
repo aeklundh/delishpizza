@@ -15,5 +15,6 @@ namespace PizzeriaDelish.Models
         public int Price { get; set; }
 
         public ICollection<DishIngredient> DishIngredients { get; set; }
+        public ICollection<DishOrderIngredient> DishOrderIngredients { get; set; }
     }
 }

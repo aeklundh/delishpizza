@@ -31,9 +31,9 @@ namespace PizzeriaDelish.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddToCart(int dishId)
+        public async Task<ActionResult> AddToCart(int dishId)
         {
-            _cartService.AddToCart(dishId);
+            await _cartService.AddToCart(dishId);
 
             return ViewComponent("Cart");
         }

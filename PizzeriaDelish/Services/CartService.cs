@@ -35,7 +35,7 @@ namespace PizzeriaDelish.Services
             _session.SetString("cart", String.Empty);
         }
 
-        public async void AddToCart(int dishId)
+        public async Task AddToCart(int dishId)
         {
             CartItem addItem = await CreateCartItemAsync(dishId);
 

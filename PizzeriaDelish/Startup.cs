@@ -12,23 +12,34 @@ using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using PizzeriaDelish.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace PizzeriaDelish
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebshopDbContext>(options =>
-                options.UseInMemoryDatabase(Configuration.GetConnectionString("DefaultConnection")));
+            if (_hostingEnvironment.IsProduction() || _hostingEnvironment.IsStaging())
+            {
+                services.AddDbContext<WebshopDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            }
+            else
+            {
+                services.AddDbContext<WebshopDbContext>(options =>
+                    options.UseInMemoryDatabase("DefaultConnection"));
+            }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<WebshopDbContext>()
@@ -51,15 +62,18 @@ namespace PizzeriaDelish
 
             services.AddSession(options =>
             {
-                // Set a short timeout for easy testing.
                 options.IdleTimeout = TimeSpan.FromHours(1);
-                options.CookieHttpOnly = true;
+                options.Cookie.HttpOnly = true;
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, WebshopDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AddressService addressService)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, WebshopDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, AddressService addressService, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddAzureWebAppDiagnostics();
+            loggerFactory.AddConsole();
+            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -83,6 +97,11 @@ namespace PizzeriaDelish
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            if (_hostingEnvironment.IsProduction() || _hostingEnvironment.IsStaging())
+            {
+                context.Database.Migrate();
+            }
 
             DbInitialiser.Initialise(context, userManager, roleManager, addressService);
         }
