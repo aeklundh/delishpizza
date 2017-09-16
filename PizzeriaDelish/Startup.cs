@@ -30,7 +30,10 @@ namespace PizzeriaDelish
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (_hostingEnvironment.IsProduction() || _hostingEnvironment.IsStaging())
+            if (_hostingEnvironment.IsProduction()
+                || _hostingEnvironment.IsStaging()
+                || _hostingEnvironment.EnvironmentName == "IntegratedDb"
+                || _hostingEnvironment.EnvironmentName == "LocalSql")
             {
                 services.AddDbContext<WebshopDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -38,7 +41,7 @@ namespace PizzeriaDelish
             else
             {
                 services.AddDbContext<WebshopDbContext>(options =>
-                    options.UseInMemoryDatabase("DefaultConnection"));
+                    options.UseInMemoryDatabase("database"));
             }
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -98,7 +101,10 @@ namespace PizzeriaDelish
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            if (_hostingEnvironment.IsProduction() || _hostingEnvironment.IsStaging())
+            if (_hostingEnvironment.IsProduction()
+                || _hostingEnvironment.IsStaging()
+                || _hostingEnvironment.EnvironmentName == "IntegratedDb"
+                || _hostingEnvironment.EnvironmentName == "LocalSql")
             {
                 context.Database.Migrate();
             }

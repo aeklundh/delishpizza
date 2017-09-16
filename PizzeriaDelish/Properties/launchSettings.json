@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PizzeriaDelish": {
+    "PizzeriaDelish (In memory)": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
@@ -24,11 +24,19 @@
       },
       "applicationUrl": "http://localhost:54802/"
     },
-    "PizzeriaDelishSql": {
+    "PizzeriaDelish (localdb)": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging"
+        "ASPNETCORE_ENVIRONMENT": "IntegratedDb"
+      },
+      "applicationUrl": "http://localhost:54802/"
+    },
+    "PizzeriaDelish (Local SQL Server)": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "LocalSql"
       },
       "applicationUrl": "http://localhost:54802/"
     }
