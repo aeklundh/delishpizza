@@ -5,6 +5,7 @@ using PizzeriaDelish.Data;
 using PizzeriaDelish.Extensions;
 using PizzeriaDelish.Models;
 using PizzeriaDelish.Models.ViewComponentViewModels;
+using PizzeriaDelish.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace PizzeriaDelish.ViewComponents
     public class CartItemDetailsViewComponent : ViewComponent
     {
         private readonly WebshopDbContext _context;
+        private readonly IngredientService _ingredientService;
 
-        public CartItemDetailsViewComponent(WebshopDbContext context)
+        public CartItemDetailsViewComponent(WebshopDbContext context, IngredientService ingredientService)
         {
             _context = context;
+            _ingredientService = ingredientService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(Guid cartItemId)
@@ -33,7 +36,7 @@ namespace PizzeriaDelish.ViewComponents
                     cartItem.Dish.DishIngredients = baseDish.DishIngredients;
                 }
 
-                List<Ingredient> availableIngredients = _context.Ingredients.ToList();
+                List<Ingredient> availableIngredients = await _ingredientService.GetIngredients();
                 List<Ingredient> addedIngredients = new List<Ingredient>();
                 foreach (Ingredient ingredient in cartItem.Ingredients)
                 {

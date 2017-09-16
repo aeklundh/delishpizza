@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using Microsoft.AspNetCore.Authorization;
+using PizzeriaDelish.Services;
 
 namespace PizzeriaDelish.Controllers
 {
@@ -15,16 +16,18 @@ namespace PizzeriaDelish.Controllers
     public class IngredientController : Controller
     {
         private readonly WebshopDbContext _context;
+        private readonly IngredientService _ingredientService;
 
-        public IngredientController(WebshopDbContext context)
+        public IngredientController(WebshopDbContext context, IngredientService ingredientService)
         {
             _context = context;
+            _ingredientService = ingredientService;
         }
 
         // GET: Ingredient
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Ingredients.ToListAsync());
+            return View(await _ingredientService.GetIngredients());
         }
 
         // GET: Ingredient/Details/5

@@ -18,11 +18,15 @@ namespace PizzeriaDelish.Controllers
     {
         private readonly WebshopDbContext _context;
         private readonly AdminService _adminService;
+        private readonly CategoryService _categoryService;
+        private readonly IngredientService _ingredientService;
 
-        public DishController(WebshopDbContext context, AdminService adminService)
+        public DishController(WebshopDbContext context, AdminService adminService, CategoryService categoryService, IngredientService ingredientService)
         {
             _context = context;
             _adminService = adminService;
+            _categoryService = categoryService;
+            _ingredientService = ingredientService;
         }
 
         // GET: Dishes
@@ -51,9 +55,9 @@ namespace PizzeriaDelish.Controllers
         }
 
         // GET: Dishes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View(new CreateViewModel(_context.Categories.ToList()));
+            return View(new CreateViewModel(await _categoryService.GetCategories()));
         }
 
         // POST: Dishes/Create
@@ -84,7 +88,7 @@ namespace PizzeriaDelish.Controllers
                 return NotFound();
             }
 
-            return View(new EditViewModel(dish, await _context.Categories.ToListAsync(), await _context.Ingredients.ToListAsync()));
+            return View(new EditViewModel(dish, await _categoryService.GetCategories(), await _ingredientService.GetIngredients()));
         }
 
         // POST: Dishes/Edit/5

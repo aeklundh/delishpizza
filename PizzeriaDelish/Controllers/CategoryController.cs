@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
+using PizzeriaDelish.Services;
 
 namespace PizzeriaDelish.Controllers
 {
     public class CategoryController : Controller
     {
         private readonly WebshopDbContext _context;
+        private readonly CategoryService _categoryService;
 
-        public CategoryController(WebshopDbContext context)
+        public CategoryController(WebshopDbContext context, CategoryService categoryService)
         {
             _context = context;
+            _categoryService = categoryService;
         }
 
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            return View(await _categoryService.GetCategories());
         }
 
         // GET: Category/Details/5

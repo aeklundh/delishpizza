@@ -55,7 +55,9 @@ namespace PizzeriaDelish
             services.AddTransient<AddressService>();
             services.AddTransient<AdminService>();
             services.AddTransient<CartService>();
+            services.AddTransient<CategoryService>();
             services.AddTransient<CheckoutService>();
+            services.AddTransient<IngredientService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddMvc();
