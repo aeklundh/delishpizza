@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Models;
 using PizzeriaDelish.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PizzeriaDelish.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly WebshopDbContext _context;
