@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -26,7 +28,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Pizzeria Delish</a>
+                @if (hostingEnvironment.EnvironmentName == "Producton")
+                {
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Pizzeria Delish</a>
+                }
+                else
+                {
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Pizzeria Delish (@hostingEnvironment.EnvironmentName)</a>
+                }
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
