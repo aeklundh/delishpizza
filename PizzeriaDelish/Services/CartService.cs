@@ -89,7 +89,6 @@ namespace PizzeriaDelish.Services
         public int CalculatePrice(CartItem cartItem)
         {
             int sum = cartItem.Dish.Price;
-            List<Ingredient> ingredients = new List<Ingredient>();
             Dish baseDish = _context.Dishes
                 .Include(x => x.DishIngredients)
                 .FirstOrDefault(x => x.DishId == cartItem.Dish.DishId);
