@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace PizzeriaDelishTests
+namespace PizzeriaDelishTests.Tests
 {
     public class CheckoutServiceTests : BaseTest
     {

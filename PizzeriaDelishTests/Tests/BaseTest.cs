@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PizzeriaDelish.Data;
 using PizzeriaDelish.Services;
+using PizzeriaDelishTests.FakeClasses;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PizzeriaDelishTests
+namespace PizzeriaDelishTests.Tests
 {
     public abstract class BaseTest
     {

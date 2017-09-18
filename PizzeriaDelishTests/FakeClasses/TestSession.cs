@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace PizzeriaDelishTests
+namespace PizzeriaDelishTests.FakeClasses
 {
     internal class TestSession : ISession
     {
