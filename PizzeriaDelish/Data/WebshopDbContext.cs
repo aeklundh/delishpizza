@@ -15,6 +15,9 @@ namespace PizzeriaDelish.Data
         {
         }
 
+        public WebshopDbContext()
+        { }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //set DishIngredient keys
@@ -51,12 +54,12 @@ namespace PizzeriaDelish.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
 
-        public DbSet<Dish> Dishes { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<DishIngredient> DishIngredients { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<DishOrderIngredient> DishOrderIngredients { get; set; }
-        public DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Dish> Dishes { get; set; }
+        public virtual DbSet<Ingredient> Ingredients { get; set; }
+        public virtual DbSet<DishIngredient> DishIngredients { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<DishOrderIngredient> DishOrderIngredients { get; set; }
+        public virtual DbSet<Address> Addresses { get; set; }
     }
 }
